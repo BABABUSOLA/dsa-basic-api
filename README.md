@@ -1,6 +1,6 @@
 # Daily Quote API
 
-A RESTful API for managing daily quotes, built with TypeScript, Node.js, Express.js, and PostgreSQL using TypeORM. Deployed on Render.
+A simple RESTful API for managing daily quotes, built with TypeScript, Node.js, Express.js, and PostgreSQL using TypeORM.
 
 ## Features
 
@@ -10,13 +10,11 @@ A RESTful API for managing daily quotes, built with TypeScript, Node.js, Express
 - Express.js for routing and middleware
 - Built-in JSON body parsing
 - CORS support
-- Environment-based configuration (.env.dev and .env.prod)
-- Authentication and authorization support
+- No authentication/authorization required
 - Heavily commented codebase for educational purposes
 - Functional programming paradigm
 - Pure functions with minimal side effects
 - No classes or stateful objects (except for TypeORM entities)
-- Deployed on Render platform
 
 ## API Endpoints
 
@@ -32,152 +30,298 @@ A RESTful API for managing daily quotes, built with TypeScript, Node.js, Express
 ## Project Structure
 
 ```
-DSA/
+basic-api/
 ├── dist/               # Compiled JavaScript files
 ├── src/                # TypeScript source code
 │   ├── config/         # Configuration files
-│   │   ├── database.ts # TypeORM configuration
-│   │   └── auth.ts     # Authentication configuration
+│   │   └── database.ts # TypeORM configuration
 │   ├── entities/       # TypeORM entities
-│   │   ├── Quote.ts    # Quote entity definition
-│   │   └── User.ts     # User entity definition
+│   │   └── Quote.ts    # Quote entity definition
 │   ├── index.ts        # Main entry point
 │   ├── server.ts       # Express server and route handlers
 │   └── quoteService.ts # Database operations handler
 ├── package.json        # Project dependencies
 ├── tsconfig.json       # TypeScript configuration
-├── render.yaml         # Render deployment configuration
-├── .env.dev           # Development environment variables
-├── .env.prod          # Production environment variables
-└── README.md          # Project documentation
+└── README.md           # Project documentation
 ```
 
-## Environment Configuration
+## Prerequisites
 
-The project uses different environment files for development and production:
+- Node.js (v14 or higher recommended)
+- npm (comes with Node.js)
+- PostgreSQL (v12 or higher recommended)
 
-### Development Environment (.env.dev)
+## Installation Steps
+
+### For Mac Users
+
+1. Install Node.js and npm:
+
+   ```bash
+   # Using Homebrew (recommended)
+   brew install node
+
+   # Verify installation
+   node --version
+   npm --version
+   ```
+
+2. Install PostgreSQL:
+
+   ```bash
+   # Using Homebrew
+   brew install postgresql@14
+
+   # Start PostgreSQL service
+   brew services start postgresql@14
+   ```
+
+3. Create the database:
+
+   ```bash
+   # Connect to PostgreSQL
+   psql postgres
+
+   # Create database
+   CREATE DATABASE quotes_db;
+
+   # Create user (if needed)
+   CREATE USER postgres WITH PASSWORD 'postgres';
+
+   # Grant privileges
+   GRANT ALL PRIVILEGES ON DATABASE quotes_db TO postgres;
+   ```
+
+4. Clone the repository:
+
+   ```bash
+   git clone <repository-url>
+   cd basic-api
+   ```
+
+5. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+6. Build the project:
+
+   ```bash
+   npm run build
+   ```
+
+7. Start the server:
+   ```bash
+   npm start
+   ```
+
+### For Windows Users
+
+1. Install Node.js and npm:
+
+   - Download the Node.js installer from [nodejs.org](https://nodejs.org)
+   - Run the installer and follow the installation wizard
+   - Verify installation by opening Command Prompt:
+     ```cmd
+     node --version
+     npm --version
+     ```
+
+2. Install PostgreSQL:
+
+   - Download PostgreSQL installer from [postgresql.org](https://www.postgresql.org/download/windows/)
+   - Run the installer and follow the installation wizard
+   - Remember the password you set for the postgres user
+   - Make sure to check the option to install the command line tools
+
+3. Create the database:
+
+   - Open Command Prompt
+   - Connect to PostgreSQL:
+     ```cmd
+     psql -U postgres
+     ```
+   - Create database:
+     ```sql
+     CREATE DATABASE quotes_db;
+     ```
+
+4. Clone the repository:
+
+   ```cmd
+   git clone <repository-url>
+   cd basic-api
+   ```
+
+5. Install dependencies:
+
+   ```cmd
+   npm install
+   ```
+
+6. Build the project:
+
+   ```cmd
+   npm run build
+   ```
+
+7. Start the server:
+   ```cmd
+   npm start
+   ```
+
+## Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
 ```env
 DB_HOST=localhost
 DB_PORT=5432
 DB_USERNAME=postgres
 DB_PASSWORD=postgres
 DB_NAME=quotes_db
-PORT=4000
-JWT_SECRET=your_development_secret
+PORT=3000
 ```
 
-### Production Environment (.env.prod)
-```env
-DB_HOST=your_production_host
-DB_PORT=5432
-DB_USERNAME=your_production_username
-DB_PASSWORD=your_production_password
-DB_NAME=quotes_db
-PORT=4000
-JWT_SECRET=your_production_secret
+## Code Explanation
+
+### Project Architecture
+
+The project follows a modular architecture with clear separation of concerns:
+
+1. **Database Configuration (`config/database.ts`)**
+
+   - TypeORM configuration
+   - Database connection settings
+   - Entity registration
+
+2. **Quote Entity (`entities/Quote.ts`)**
+
+   - Defines the database schema
+   - Includes validation and relationships
+   - Handles data persistence
+
+3. **Main Entry Point (`index.ts`)**
+
+   - Initializes database connection
+   - Sets up Express server
+   - Handles application startup
+
+4. **Server Module (`server.ts`)**
+
+   - Express.js server configuration
+   - Route handlers and middleware
+   - Error handling and response formatting
+   - CORS configuration
+
+5. **Quote Service (`quoteService.ts`)**
+   - Implements database operations
+   - Handles CRUD operations
+   - Manages data persistence
+
+### Key Components
+
+#### Express Server Setup
+
+```typescript
+export const createServer = (quoteService: QuoteService) => {
+  const app = express();
+  app.use(express.json());
+
+  // CORS middleware
+  app.use((req: Request, res: Response, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PUT, DELETE, OPTIONS"
+    );
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    next();
+  });
+
+  // Route handlers
+  app.get("/quotes", async (req: Request, res: Response) => {
+    // Handler implementation
+  });
+
+  // ... other routes ...
+
+  return app;
+};
 ```
 
-The environment file is automatically selected based on the `NODE_ENV` environment variable:
-- Development: `NODE_ENV=development` (default)
-- Production: `NODE_ENV=production`
+#### Quote Entity
 
-## Installation Steps
+```typescript
+@Entity()
+export class Quote {
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd DSA
-   ```
+  @Column()
+  text: string;
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+  @Column()
+  author: string;
 
-3. Create environment files:
-   - Copy `.env.dev.example` to `.env.dev` for development
-   - Copy `.env.prod.example` to `.env.prod` for production
-   - Update the values according to your environment
+  @Column("simple-array")
+  tags: string[];
 
-4. Build the project:
-   ```bash
-   npm run build
-   ```
+  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+  createdAt: Date;
 
-5. Start the server:
-   ```bash
-   # Development
-   npm start
-
-   # Production
-   NODE_ENV=production npm start
-   ```
-
-## Deployment on Render
-
-The project is configured for deployment on Render using the `render.yaml` configuration file. The configuration includes:
-
-```yaml
-services:
-  - type: web
-    name: dsa-quotes-api
-    env: node
-    buildCommand: npm install
-    startCommand: npm start
+  @Column({
+    type: "timestamp",
+    default: () => "CURRENT_TIMESTAMP",
+    onUpdate: "CURRENT_TIMESTAMP",
+  })
+  updatedAt: Date;
+}
 ```
 
-To deploy on Render:
+### Request Flow
 
-1. Create a new Web Service on Render
-2. Connect your GitHub repository
-3. Render will automatically detect the `render.yaml` configuration
-4. Set up the following environment variables in Render's dashboard:
-   - `DB_HOST`
-   - `DB_PORT`
-   - `DB_USERNAME`
-   - `DB_PASSWORD`
-   - `DB_NAME`
-   - `PORT`
-   - `JWT_SECRET`
-   - `NODE_ENV=production`
+1. **Request Reception**
 
-## Available Scripts
+   - Server receives HTTP request
+   - Request is parsed and validated
+   - Route is determined
 
-- `npm start`: Start the development server
-- `npm run build`: Build the TypeScript project
-- `npm run typeorm`: Run TypeORM CLI commands
-- `npm run migration:generate`: Generate a new migration
-- `npm run migration:run`: Run pending migrations
-- `npm run migration:revert`: Revert the last migration
+2. **Database Operation**
 
-## Dependencies
+   - Appropriate database operation is executed
+   - Data is validated and processed
+   - Results are retrieved
 
-### Main Dependencies
-- express: ^5.1.0
-- typeorm: ^0.3.20
-- pg: ^8.11.3
-- dotenv: ^16.5.0
-- bcrypt: ^6.0.0
-- jsonwebtoken: ^9.0.2
-- reflect-metadata: ^0.1.13
+3. **Response Generation**
+   - Response is formatted
+   - Status code is set
+   - Data is sent back to client
 
-### Development Dependencies
-- typescript: ^5.3.3
-- ts-node: ^10.9.2
-- @types/node: ^20.11.19
-- @types/express: ^5.0.2
-- @types/bcrypt: ^5.0.2
-- @types/jsonwebtoken: ^9.0.9
+## Troubleshooting
 
-## Contributing
+### Common Issues
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. **Database Connection Issues**
+
+   - Error: `Connection refused`
+   - Solution: Ensure PostgreSQL is running and credentials are correct
+
+2. **Port Already in Use**
+
+   - Error: `EADDRINUSE: address already in use :::3000`
+   - Solution: Change the port in the configuration or kill the process using the port
+
+3. **TypeScript Compilation Errors**
+
+   - Error: `TS2307: Cannot find module`
+   - Solution: Run `npm install` to ensure all dependencies are installed
+
+4. **Database Migration Issues**
+   - Error: `relation does not exist`
+   - Solution: Ensure database is created and migrations are run
 
 ## License
 
-This project is licensed under the MIT License.
+This project is open-source and available for educational purposes.
