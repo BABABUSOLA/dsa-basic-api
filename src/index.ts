@@ -3,6 +3,12 @@ import { AppDataSource } from "./config/database";
 import { QuoteService } from "./quoteService";
 import { UserService } from "./userService";
 import { createServer } from "./server";
+import dotenv from "dotenv";
+
+const envFile = process.env.NODE_ENV === 'production' ? '.env.prod' : '.env.dev';
+console.log({envFile});
+dotenv.config({ path: envFile });
+
 
 /**
  * Main entry point for the Daily Quote API

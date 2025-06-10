@@ -3,7 +3,9 @@ import jwt from "jsonwebtoken";
 import { UserService } from "../userService";
 import { UserRole } from "../entities/User";
 import dotenv from "dotenv";
-dotenv.config();
+
+const envFile = process.env.NODE_ENV === 'production' ? '.env.prod' : '.env.dev';
+dotenv.config({ path: envFile });
 
 export interface AuthRequest extends Request {
     user?: {
