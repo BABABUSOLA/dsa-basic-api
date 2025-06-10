@@ -2,3 +2,5 @@ node_modules
 dist
 .qodo
 .env
+.env.dev
+.env.prod
