@@ -1,6 +1,6 @@
 # Daily Quote API
 
-A simple RESTful API for managing daily quotes, built with TypeScript, Node.js, Express.js, and PostgreSQL using TypeORM.
+A RESTful API for managing daily quotes, built with TypeScript, Node.js, Express.js, and PostgreSQL using TypeORM. Deployed on Render with automated CI/CD pipeline.
 
 ## Features
 
@@ -10,11 +10,14 @@ A simple RESTful API for managing daily quotes, built with TypeScript, Node.js, 
 - Express.js for routing and middleware
 - Built-in JSON body parsing
 - CORS support
-- No authentication/authorization required
+- Environment-based configuration (.env.dev and .env.prod)
+- Authentication and authorization support
 - Heavily commented codebase for educational purposes
 - Functional programming paradigm
 - Pure functions with minimal side effects
 - No classes or stateful objects (except for TypeORM entities)
+- Deployed on Render platform
+- Automated CI/CD pipeline with GitHub Actions
 
 ## API Endpoints
 
@@ -325,3 +328,32 @@ export class Quote {
 ## License
 
 This project is open-source and available for educational purposes.
+
+## CI/CD Pipeline
+
+The project uses GitHub Actions for continuous integration and deployment. The pipeline includes:
+
+1. **Building and Deployment**
+   - Runs only on pushes to main branch
+   - Builds the TypeScript project
+   - Deploys to Render if tests pass
+
+### Required Secrets
+
+Set up the following secrets in your GitHub repository:
+
+- `DB_HOST`: Production database host
+- `DB_PORT`: Production database port
+- `DB_USERNAME`: Production database username
+- `DB_PASSWORD`: Production database password
+- `DB_NAME`: Production database name
+- `PORT`: Production port
+- `JWT_SECRET`: Production JWT secret
+- `RENDER_TOKEN`: Render API token
+- `RENDER_SERVICE_ID`: Your Render service ID
+
+To set up secrets:
+1. Go to your GitHub repository
+2. Navigate to Settings > Secrets and variables > Actions
+3. Click "New repository secret"
+4. Add each secret with its corresponding value
