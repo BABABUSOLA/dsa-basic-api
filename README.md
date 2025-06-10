@@ -348,9 +348,7 @@ Set up the following secrets in your GitHub repository:
 - `DB_PASSWORD`: Production database password
 - `DB_NAME`: Production database name
 - `PORT`: Production port
-- `JWT_SECRET`: Production JWT secret
-- `RENDER_TOKEN`: Render API token
-- `RENDER_SERVICE_ID`: Your Render service ID
+
 
 To set up secrets:
 1. Go to your GitHub repository
